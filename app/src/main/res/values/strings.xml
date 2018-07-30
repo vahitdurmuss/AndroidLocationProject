@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">FusedLocationAPIProject</string>
+    <string name="latitude">Latitude</string>
+    <string name="Longitude">Longitude</string>
+    <string name="NumberOfConnectedSatellites">Number Of Connected Satellites</string>
+    <string name="NumberOfSatellites">NumberOfSatellites</string>
+
+
+</resources>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.vahitdurmus.fusedlocationapiproject.MainActivity"
+    tools:layout_editor_absoluteY="89dp">
+
+
+    <TextView
+        android:id="@+id/latitudeText"
+        android:text="@string/latitude"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:layout_below="@id/latitudeText"
+        android:id="@+id/tVlatitude"
+        android:hint="32"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:layout_below="@+id/tVlatitude"
+        android:id="@+id/longitudeText"
+        android:text="@string/Longitude"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:layout_below="@id/longitudeText"
+        android:id="@+id/tVlongitude"
+        android:hint="32"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:layout_below="@+id/tVlongitude"
+        android:id="@+id/numberOfSatellitesText"
+        android:text="@string/NumberOfSatellites"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:layout_below="@id/numberOfSatellitesText"
+        android:id="@+id/tVnumberOfSatellites"
+        android:hint="32"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:layout_below="@+id/tVnumberOfSatellites"
+        android:id="@+id/numberOfConnectedSatellitesText"
+        android:text="@string/NumberOfConnectedSatellites"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:layout_below="@id/numberOfConnectedSatellitesText"
+        android:id="@+id/tVnumberOfConnectedSatellites"
+        android:hint="32"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+
+
+
+</RelativeLayout>
