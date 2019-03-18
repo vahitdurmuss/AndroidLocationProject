@@ -43,7 +43,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         satellitesView.setText("0");
 
         locationFactory=new LocationFactory(this);
-        locationFactory.startLocationTrack();
+        locationFactory.setLocationSettingsAndStart(2000,1000);
+
     }
     
 
@@ -55,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     @Override
     protected void onResume() {
         super.onResume();
+        locationFactory.startLocationUpdates();
 
     }
     @Override
@@ -65,6 +67,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     @Override
     protected void onStop() {
         super.onStop();
+        locationFactory.stopLocationRequest();
 
     }
     @Override
@@ -76,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        locationFactory.startLocationTrack();
+        locationFactory.stopLocationTrack();
     }
 
     @Override
