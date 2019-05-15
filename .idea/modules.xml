@@ -3,8 +3,10 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/AndroidLocationProject.iml" filepath="$PROJECT_DIR$/AndroidLocationProject.iml" />
+      <module fileurl="file://C:\Users\vahit.durmus\Desktop\LocationFactory\AndroidLocationProject\AndroidLocationProject.iml" filepath="C:\Users\vahit.durmus\Desktop\LocationFactory\AndroidLocationProject\AndroidLocationProject.iml" />
       <module fileurl="file://C:\Users\vahit.durmus\Desktop\Android Location Project\AndroidLocationProject\FusedLocationAPIProject.iml" filepath="C:\Users\vahit.durmus\Desktop\Android Location Project\AndroidLocationProject\FusedLocationAPIProject.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://C:\Users\vahit.durmus\Desktop\LocationFactory\AndroidLocationProject\app\app.iml" filepath="C:\Users\vahit.durmus\Desktop\LocationFactory\AndroidLocationProject\app\app.iml" />
       <module fileurl="file://C:\Users\vahit.durmus\Desktop\Android Location Project\AndroidLocationProject\app\app.iml" filepath="C:\Users\vahit.durmus\Desktop\Android Location Project\AndroidLocationProject\app\app.iml" />
     </modules>
   </component>

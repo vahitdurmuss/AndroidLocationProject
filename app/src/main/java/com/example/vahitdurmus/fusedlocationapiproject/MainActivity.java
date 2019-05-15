@@ -18,7 +18,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
-public class MainActivity extends AppCompatActivity implements LocationListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, GpsStatus.Listener  {
+public class MainActivity extends AppCompatActivity implements LocationListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, GpsStatus.Listener, GpsStatus.NmeaListener {
 
     @BindView(R.id.tVlatitude)
     TextView latitudeView;
@@ -79,7 +79,11 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        locationFactory.stopLocationTrack();
+        try {
+            locationFactory.stopLocationTrack();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -127,5 +131,10 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         {
             Toast.makeText(this,e.getMessage(),Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public void onNmeaReceived(long timestamp, String nmea) {
+        locationFactory.setNmeaObject(nmea);
     }
 }

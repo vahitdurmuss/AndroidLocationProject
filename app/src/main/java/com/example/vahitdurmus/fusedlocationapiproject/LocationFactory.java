@@ -9,33 +9,64 @@ import android.location.GpsStatus;
 import android.location.Location;
 import android.location.LocationManager;
 import android.support.v4.app.ActivityCompat;
+
+import com.example.vahitdurmus.fusedlocationapiproject.NmeaMessages.GGA;
+import com.example.vahitdurmus.fusedlocationapiproject.NmeaMessages.GST;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import java.text.DecimalFormat;
 
-
-/**
- * Created by vahit.durmus on 27.07.2018.
- */
 
 public class LocationFactory {
 
     private volatile Location currentLocation;
     private volatile Location previousLocation;
+    private volatile Location location;
+    private volatile Location fixedLastLocation;
     private Context context;
     private LocationRequest locationRequest;
     private GoogleApiClient mGoogleApiClient;
     private LocationManager locationManager;
     private volatile int numberOfSatellites = 0;
     private volatile int numberOfConnectedSatellites = 0;
+    private volatile GGA $GGA;
+    private volatile GST $GST;
+
 
     public LocationFactory(Context context) {
         setContext(context);
         setZeroNumberOfSatellites();
     }
 
+    public void  set$GGA(GGA gga){
+        this.$GGA=gga;
+    }
 
+    public GGA get$GGA(){
+        return this.$GGA;
+    }
+
+    public  void set$GST(GST gst){
+        this.$GST=gst;
+    }
+
+    public GST get$GST(){
+        return this.$GST;
+    }
+
+    public void setNmeaObject(String nmeaMessage){
+        String $nmeamessagetype= nmeaMessage.split(",")[0];
+        if ($nmeamessagetype.equals("$GPGGA") || $nmeamessagetype.equals("$GLGGA") || $nmeamessagetype.equals("$GNGGA")){
+            GGA gga=new GGA(nmeaMessage);
+            set$GGA(gga);
+        }
+        if ($nmeamessagetype.equals("$GPGST") || $nmeamessagetype.equals("$GLGST") || $nmeamessagetype.equals("$GNGST") ){
+            GST gst=new GST(nmeaMessage);
+            set$GST(gst);
+        }
+    }
     /**
      * is used to set context of activity. it takes context as parameter.
      * @param context
@@ -59,25 +90,11 @@ public class LocationFactory {
         }
     }
 
-    public void stopLocationTrack() {
-
-        try{
-            stopLocationRequest();
-            disConnectGoogleAPI();
-            removeGpsStatusListener();
-            removeNmeaStatusListener();
-        }
-        catch (Exception e){
-
-        }
-    }
-
-
     public void removeGpsStatusListener() {
         try {
-            locationManager.removeGpsStatusListener((GpsStatus.Listener) context);
+            locationManager.removeGpsStatusListener((GpsStatus.Listener)context);
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
     }
 
@@ -139,6 +156,12 @@ public class LocationFactory {
         }
     }
 
+    public void stopLocationTrack() throws Exception {
+        stopLocationRequest();
+        disConnectGoogleAPI();
+        removeGpsStatusListener();
+        removeNmeaStatusListener();
+    }
     private synchronized void buildGoogleApiClient() {
         mGoogleApiClient = new GoogleApiClient.Builder((Activity) context)
                 .addConnectionCallbacks((GoogleApiClient.ConnectionCallbacks) context)
@@ -161,6 +184,7 @@ public class LocationFactory {
         {
             e.printStackTrace();
         }
+
     }
     public void stopLocationRequest() {
         try{
@@ -229,6 +253,18 @@ public class LocationFactory {
     public int getNumberOfSatellites() {
         return numberOfSatellites;
     }
+    public int getNumberOfSatellitesFromGGA() {
+        return $GGA.getNumberOfSatellitesInUse();
+    }
+    public double getAccuracyFromGST() throws NullPointerException{
+        return  this.$GST.getHRMS();
+    }
+    public int getFixQualityFromGGA(){
+        return this.$GGA.getFixQuality();
+    }
+    public double getAccuracyFromLocation(){
+        return this.getCurrentLocation().getAccuracy();
+    }
     public  void setZeroNumberOfSatellites(){
         this.numberOfSatellites=0;
         this.numberOfConnectedSatellites=0;
@@ -236,20 +272,123 @@ public class LocationFactory {
     public int getNumberOfConnectedSatellites() {
         return numberOfConnectedSatellites;
     }
-    public  void  setCurrentLocation(Location currentLocation)
-    {
+    public  void  setCurrentLocation(Location currentLocation) {
+        setPreviousLocation(getCurrentLocation());
         this.currentLocation=currentLocation;
     }
     public  Location getCurrentLocation(){
         return  this.currentLocation;
     }
+    public void setLocation(Location location){
+        this.location=location;
+    }
+    public Location getLocation(){
+        return this.location;
+    }
     public  void   setPreviousLocation(Location previousLocation)
     {
-        this.previousLocation=previousLocation;
+        if (previousLocation!=null)
+            this.previousLocation=previousLocation;
+    }
+
+    public void setFixedLastLocation(Location location){
+        this.fixedLastLocation=location;
+    }
+    public Location getFixedLastLocation(){
+        return this.fixedLastLocation;
     }
     public  Location getPreviousLocation(){
         return  this.previousLocation;
     }
+    public String getCurrentLongLatText(){
+        return String.valueOf(getCurrentLocation().getLongitude()) + "," + String.valueOf(getCurrentLocation().getLatitude());
+    }
 
+    public String getLongLatText(){
+        return String.valueOf(getLocation().getLongitude()) + "," + String.valueOf(getLocation().getLatitude());
+    }
+    public String getNmeaLongLatText(){
+
+        try {
+            return $GGA.getLongLatText();
+        }
+        catch (NullPointerException e){
+            return null;
+        }
+    }
+
+    public String getLongLatText(Location location){
+        return String.valueOf(location.getLongitude()) + "," + String.valueOf(location.getLatitude());
+    }
+
+    public String getPreviousLongLatText(){
+        return String.valueOf(getPreviousLocation().getLongitude()) + "," + String.valueOf(getPreviousLocation().getLatitude());
+    }
+
+
+    public String getCurrentLatLongText(){
+        return String.valueOf(getPreviousLocation().getLongitude()) + "," + String.valueOf(getPreviousLocation().getLatitude());
+    }
+
+    public float getSpeedMS(){
+
+        float speed;
+        try {
+            if (getCurrentLocation().hasSpeed()){
+                speed=getCurrentLocation().getSpeed();
+            }
+            else
+                speed=0.f;
+        }
+        catch (NullPointerException e){
+            speed=0.f;
+        }
+        return speed;
+    }
+    public double getSpeedKS(){
+
+        double speed;
+        try {
+            if (getCurrentLocation().hasSpeed()){
+                speed=(getCurrentLocation().getSpeed()*18)/5;
+                DecimalFormat df = new DecimalFormat("#.##");
+                String dx=df.format(speed);
+                dx= dx.replace(",",".");
+                speed=Double.valueOf(dx);
+            }
+            else
+                speed=0;
+        }
+        catch (NullPointerException e){
+            speed=0;
+        }
+        catch (Exception e){
+            speed=0;
+        }
+        return speed;
+    }
+
+    public double getSpeedKS(Location location){
+
+        double speed;
+        try {
+            if (location.hasSpeed()){
+                speed=(location.getSpeed()*18)/5;
+                DecimalFormat df = new DecimalFormat("#.##");
+                String dx=df.format(speed);
+                dx= dx.replace(",",".");
+                speed=Double.valueOf(dx);
+            }
+            else
+                speed=0;
+        }
+        catch (NullPointerException e){
+            speed=0;
+        }
+        catch (Exception e){
+            speed=0;
+        }
+        return speed;
+    }
 
 }
